@@ -13,3 +13,6 @@ Vue.js를 사용하기 위해서는 Node.js와 npm이 미리 설치되어 있어
 ```
 npm install vue
 ```
+
+## 라이선스
+Vue.js는 MIT 라이선스를 따릅니다. 라이선스 전문은 LICENSE 파일에서 확인할 수 있습니다.
