@@ -14,12 +14,8 @@
             ><v-icon>mdi-account</v-icon>길동이</span
           >
           <v-sheet class="d-flex justify-end align-center">
-            <v-card-subtitle class="grey--text text--lighten-1"
-              >조회수 12</v-card-subtitle
-            >
-            <v-card-subtitle class="grey--text text--lighten-1"
-              >23-04-24</v-card-subtitle
-            >
+            <v-card-subtitle>조회수 12</v-card-subtitle>
+            <v-card-subtitle>23-04-24</v-card-subtitle>
           </v-sheet>
           <v-card-text class="grey--text">
             <v-spacer></v-spacer>
@@ -28,11 +24,67 @@
           <v-divider></v-divider>
         </v-card>
 
+        <!-- 댓글창 -->
+        <v-card class="mx-auto mt-5" max-width="800">
+          <v-card-title>코멘트</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>김유신</v-list-item-title>
+                  <v-list-item-subtitle>23-04-24</v-list-item-subtitle>
+                  <v-list-item-title class="mt-2">1빠.</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>김춘추</v-list-item-title>
+                  <v-list-item-subtitle>23-04-24</v-list-item-subtitle>
+                  <v-list-item-title class="mt-2"
+                    >감동적인 글입니다.</v-list-item-title
+                  >
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>강감찬</v-list-item-title>
+                  <v-list-item-subtitle>23-04-24</v-list-item-subtitle>
+                  <v-list-item-title class="mt-2"
+                    >헐 재미없네요.</v-list-item-title
+                  >
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+          </v-card-text>
+
+          <!-- 댓글 페이지 -->
+          <div class="text-center">
+            <v-pagination
+              :length="auto"
+              :total-visible="5"
+              rounded="circle"
+            ></v-pagination>
+          </div>
+
+          <v-card-actions>
+            <v-textarea label="댓글 작성"></v-textarea>
+            <v-btn color="primary" @click="btnComment">등록</v-btn>
+          </v-card-actions>
+        </v-card>
+
         <v-sheet max-width="800" class="mx-auto">
-          <v-btn class="mt-5" color="primary">첨부파일</v-btn>
           <v-sheet class="text-right mt-6">
-            <v-btn class="mr-2" @click="btnBack">뒤로</v-btn>
-            <v-btn color="primary" @click="btnModify">수정</v-btn>
+            <v-btn class="mr-2" @click="btnDelete">삭제</v-btn>
+            <v-btn class="mr-2" @click="btnModify">수정</v-btn>
+            <v-btn color="primary" @click="btnBack">목록</v-btn>
           </v-sheet>
         </v-sheet>
       </v-container>
@@ -54,6 +106,14 @@ const btnBack = () => {
 
 const btnModify = () => {
   router.push("/modify");
+};
+
+const btnDelete = () => {
+  router.push("/delete");
+};
+
+const btnComment = () => {
+  router.push("/comment");
 };
 </script>
 
