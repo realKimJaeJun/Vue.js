@@ -1,15 +1,28 @@
-# Vue.js
-Vue.js는 현대적인 웹 애플리케이션을 빠르고 쉽게 구축할 수 있도록 도와주는 진보적인 프론트엔드 프레임워크입니다.
+@GetMapping("admin/gallery/form_minor")
+    public String galleryRequestList(Model model,
+                                     @RequestParam Map<String, String> data) {
+        // 카테고리명 불러오기용
+        List<gall_cate2VO> cates = service.selectGalleryCates();
+        // 갤러리 개설 신청 리스트 불러오기
+        List<CreateVO> list = null;
+        int category = 0;
 
-Vue.js는 Angular.js와 React.js와 같은 프론트엔드 프레임워크들과 같은 기능을 제공하며, 
+        if (data.get("category") != null && !data.get("category").isEmpty()){
+            category = Integer.parseInt(data.get("category"));
+            int totalCount = service.searchByCategoryTotal(category);
+            PagingDTO pagingDTO = new PagingUtil().getPagingDTO(data.get("pg"), totalCount);
+            list = service.searchByCategory(Integer.parseInt(data.get("category")), pagingDTO.getStart());
+            model.addAttribute("pagingDTO", pagingDTO);
+        }else{
+            int totalCount = service.galleryRequestTotal();
+            PagingDTO pagingDTO = new PagingUtil().getPagingDTO(data.get("pg"), totalCount);
+            list = service.galleryRequestList(pagingDTO.getStart());
+            model.addAttribute("pagingDTO", pagingDTO);
+        }
 
-간단하고 직관적인 문법으로 코드를 작성할 수 있어 프로젝트를 빠르게 개발할 수 있습니다.
+        model.addAttribute("list", list);
+        model.addAttribute("cates", cates);
+        model.addAttribute("selectedCategory", category);
 
-## 시작하기
-Vue.js를 사용하기 위해서는 Node.js와 npm이 미리 설치되어 있어야 합니다.
-
-설치가 완료되었다면 다음 명령어를 실행하여 Vue.js를 설치할 수 있습니다.
-
-```
-npm install vue
-```
+        return "admin/gallery/form_minor";
+    }

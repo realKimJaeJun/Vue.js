@@ -45,7 +45,7 @@
 
   <h4>PUT</h4>
   <input type="text" v-model="inputText" />
-  <button @click="btnGetUser">수정 데이터 출력하기</button>
+  <button v-on:click="btnGetUser">수정 데이터 출력</button>
   <form v-on:submit.prevent="modifyUser">
     <table border="1">
       <tr>
@@ -66,7 +66,7 @@
       </tr>
       <tr>
         <td colspan="2" align="right">
-          <input type="submit" value="등록" />
+          <input type="submit" value="수정" />
         </td>
       </tr>
     </table>
@@ -74,8 +74,9 @@
 
   <h4>DELETE</h4>
   <input type="text" v-model="inputText" />
-  <button @click="btnDeleteUser">User 삭제</button>
+  <button v-on:click="btnDeleteUser">User 삭제</button>
 </template>
+
 <script setup>
 import axios from "axios";
 import { onBeforeMount, ref, reactive } from "vue";
@@ -94,6 +95,7 @@ const btnGetUser = async () => {
     const response = await axios.get(
       `http://localhost:8080/Ch09/user1/${inputText.value}`
     );
+
     const data = response.data;
     user.uid = data.uid;
     user.name = data.name;
@@ -104,15 +106,17 @@ const btnGetUser = async () => {
   }
 };
 
+// axios put 전송 데이터 수신을 위해 백엔드(스프링부트)에서 꼭 @RequestBody 선언으로 데이터 수신
 const registerUser = () => {
   axios
     .post("http://localhost:8080/Ch09/user1", user)
     .then((response) => {
-      console.log(response);
+      console.log(response.data);
       const data = response.data;
 
       if (data.result > 0) {
-        alert("등록 성공!");
+        alert("등록완료!");
+
         users.value.push(user);
       }
     })
@@ -125,7 +129,7 @@ const modifyUser = () => {
   axios
     .put("http://localhost:8080/Ch09/user1", user)
     .then((response) => {
-      console.log(response);
+      console.log(response.data);
       users.value = response.data;
     })
     .catch((error) => {
@@ -137,7 +141,7 @@ const btnDeleteUser = () => {
   axios
     .delete(`http://localhost:8080/Ch09/user1/${inputText.value}`)
     .then((response) => {
-      console.log(response);
+      console.log(response.data);
       users.value = response.data;
     })
     .catch((error) => {
