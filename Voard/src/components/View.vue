@@ -7,9 +7,7 @@
     <v-main>
       <v-container>
         <v-card max-width="800" class="mx-auto">
-          <v-card-title class="headline font-weight-bold mb-3"
-            >제목입니다.</v-card-title
-          >
+          <v-card-title class="font-weight-bold mb-3">제목입니다.</v-card-title>
           <span class="d-flex justify-end mr-5 mb-2"
             ><v-icon>mdi-account</v-icon>길동이</span
           >
@@ -17,7 +15,7 @@
             <v-card-subtitle>조회수 12</v-card-subtitle>
             <v-card-subtitle>23-04-24</v-card-subtitle>
           </v-sheet>
-          <v-card-text class="grey--text">
+          <v-card-text>
             <v-spacer></v-spacer>
             <div>내용입니다.</div>
           </v-card-text>
