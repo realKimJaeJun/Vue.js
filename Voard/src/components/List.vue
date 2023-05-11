@@ -21,26 +21,14 @@
               </tr>
             </thead>
             <tbody @click="btnView">
-              <tr>
-                <td class="text-center">1</td>
-                <td class="text-left">제목입니다.</td>
-                <td class="text-center">길동이</td>
-                <td class="text-center">12</td>
-                <td class="text-center">23-04-24</td>
-              </tr>
-              <tr>
-                <td class="text-center">2</td>
-                <td class="text-left">입니다제목.</td>
-                <td class="text-center">길동이</td>
-                <td class="text-center">12</td>
-                <td class="text-center">23-04-24</td>
-              </tr>
-              <tr>
-                <td class="text-center">3</td>
-                <td class="text-left">제목입니다.</td>
-                <td class="text-center">길동이</td>
-                <td class="text-center">12</td>
-                <td class="text-center">23-04-24</td>
+              <tr v-for="(article, index) in state.data.articles">
+                <td class="text-center">
+                  {{ state.data.pageStartNum - index }}
+                </td>
+                <td class="text-left">{{ article.title }}</td>
+                <td class="text-center">{{ article.nick }}</td>
+                <td class="text-center">{{ article.hit }}</td>
+                <td class="text-center">{{ article.rdate }}</td>
               </tr>
             </tbody>
           </v-table>
@@ -51,8 +39,10 @@
 
           <div class="text-center">
             <v-pagination
-              :length="auto"
+              :length="state.data.lastPage"
               :total-visible="5"
+              v-model="page"
+              @click="pageClickHandler"
               rounded="circle"
             ></v-pagination>
           </div>
@@ -63,7 +53,8 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import axios from "axios";
+import { computed, onBeforeMount, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 const router = useRouter();
@@ -71,9 +62,14 @@ const store = useStore();
 
 const user = computed(() => store.getters.user);
 
+const state = reactive({
+  data: {},
+});
+
+const page = ref(1);
+
 const btnLogout = () => {
   localStorage.removeItem("accessToken");
-
   router.push("/user/login");
 };
 
@@ -81,8 +77,24 @@ const btnWrite = () => {
   router.push("/write");
 };
 
-const btnView = () => {
-  router.push("/view");
+const pageClickHandler = () => {
+  getArticles(page.value);
+};
+
+onBeforeMount(() => {
+  getArticles(1);
+});
+
+const getArticles = (page) => {
+  axios
+    .get("/list?pg=" + page)
+    .then((response) => {
+      console.log(response);
+      state.data = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 </script>
 

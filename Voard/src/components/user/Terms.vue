@@ -18,6 +18,7 @@
             label="동의합니다."
             v-model="isCheck1"
           ></v-checkbox>
+
           <v-textarea
             label="개인정보 취급방침"
             variant="outlined"
@@ -30,20 +31,28 @@
             label="동의합니다."
             v-model="isCheck2"
           ></v-checkbox>
+          <v-sheet class="text-center">
+            <v-btn class="mr-2" @click="btnCancel">취소</v-btn>
+            <v-btn color="primary" @click="btnNext">다음</v-btn>
+          </v-sheet>
         </v-sheet>
-        <v-sheet class="text-center">
-          <v-btn class="mr-2" @click="btnCancel">취소</v-btn>
-          <v-btn color="primary" @click="btnNext">다음</v-btn>
-        </v-sheet>
+        <v-dialog v-model="dialog" width="400">
+          <v-card>
+            <v-card-text> 약관에 동의해야 합니다. </v-card-text>
+            <v-card-actions>
+              <v-btn color="primary" block @click="dialog = false">확인</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
     </v-main>
   </v-app>
 </template>
-
 <script setup>
 import axios from "axios";
-import { useRouter } from "vue-router";
+import { ref } from "vue";
 import { reactive, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -55,6 +64,8 @@ const value = reactive({
   privacy: null,
 });
 
+const dialog = ref(false);
+
 const btnCancel = () => {
   router.push("/user/login");
 };
@@ -63,15 +74,16 @@ const btnNext = () => {
   if (isCheck1.value && isCheck2.value) {
     router.push("/user/register");
   } else {
-    alert("약관에 동의해주세요.");
+    dialog.value = true;
   }
 };
 
 onBeforeMount(() => {
   axios
-    .get("http://localhost:8080/Voard/user/terms")
+    .get("/user/terms")
     .then((response) => {
       console.log(response);
+
       value.terms = response.data.terms;
       value.privacy = response.data.privacy;
     })
@@ -80,5 +92,4 @@ onBeforeMount(() => {
     });
 });
 </script>
-
 <style scoped></style>

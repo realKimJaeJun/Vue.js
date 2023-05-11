@@ -22,7 +22,30 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="7">
-                  <v-btn color="warning" class="ml-2">중복확인</v-btn>
+                  <v-btn
+                    :loading="loading"
+                    color="warning"
+                    class="ml-2"
+                    @click="btnCheckUid"
+                    >중복확인</v-btn
+                  >
+                  <v-chip
+                    v-if="rsChip1"
+                    class="ma-2"
+                    color="red"
+                    text-color="white"
+                  >
+                    사용중인 아이디 입니다.
+                  </v-chip>
+
+                  <v-chip
+                    v-if="rsChip2"
+                    class="ma-2"
+                    color="green"
+                    text-color="white"
+                  >
+                    사용 가능한 아이디 입니다.
+                  </v-chip>
                 </v-col>
               </v-row>
               <v-row no-gutters="true" class="mb-2">
@@ -158,6 +181,7 @@
   </v-app>
 </template>
 <script setup>
+import { ref } from "vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
@@ -176,10 +200,42 @@ const user = reactive({
   addr2: null,
 });
 
+const rsChip1 = ref(false);
+const rsChip2 = ref(false);
+const loading = ref(false);
+
+const btnCheckUid = () => {
+  loading.value = true;
+  axios
+    .get("/user/checkUid", {
+      params: {
+        uid: user.uid,
+      },
+    })
+    .then((response) => {
+      console.log(response);
+
+      setTimeout(() => {
+        loading.value = false;
+        const count = response.data;
+        if (count == 0) {
+          rsChip1.value = false;
+          rsChip2.value = true;
+        } else {
+          rsChip1.value = true;
+          rsChip2.value = false;
+        }
+      }, 600);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 const btnRegister = () => {
   //console.log(user);
   axios
-    .post("http://localhost:8080/Voard/user/register", user)
+    .post("/user/register", user)
     .then((response) => {
       console.log(response);
       alert("회원가입 완료!");
